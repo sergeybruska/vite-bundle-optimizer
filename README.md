@@ -1,0 +1,202 @@
+# vite-bundle-optimizer
+
+A Vite plugin for automatic production bundle optimization via intelligent chunk splitting, vendor grouping, shared dependency extraction, and compression.
+
+## Features
+
+- **Intelligent vendor splitting** — automatically groups node_modules into cacheable vendor chunks by ecosystem (react, UI, charts, editor, etc.)
+- **Shared dependency detection** — extracts dependencies used by multiple lazy chunks into shared chunks
+- **Initial vs lazy awareness** — keeps lazy-only vendors out of the initial bundle
+- **Chunk size limits** — merges undersized chunks, enforces max chunk count
+- **Gzip & Brotli compression** — generates `.gz` and `.br` files for JS and CSS assets
+- **Bundle reports** — console, JSON, and HTML reports with before/after comparison
+- **Three strategies** — conservative, balanced (default), and aggressive
+- **Framework-agnostic** — works with React, Vue, Svelte, Solid, and vanilla
+
+## Installation
+
+```bash
+npm install -D vite-bundle-optimizer
+```
+
+## Quick Start
+
+```ts
+import { defineConfig } from 'vite';
+import bundleOptimizer from 'vite-bundle-optimizer';
+
+export default defineConfig({
+  plugins: [bundleOptimizer()],
+});
+```
+
+That's it. The plugin automatically optimizes your production build.
+
+## Configuration
+
+```ts
+bundleOptimizer({
+  enabled: true,
+
+  // Optimization strategy: 'conservative' | 'balanced' | 'aggressive'
+  strategy: 'balanced',
+
+  // Chunk size limits
+  minChunkSize: 30_000,   // 30 KB — chunks smaller than this are merged
+  maxChunkSize: 500_000,  // 500 KB — target maximum chunk size
+  maxChunks: 30,          // Maximum number of chunks
+
+  // Compression
+  compression: {
+    gzip: true,
+    brotli: true,
+  },
+
+  // Reporting
+  report: true,           // or { format: 'json', output: './bundle-report.json' }
+
+  // Network assumptions for chunk count tuning
+  network: {
+    protocol: 'auto',     // 'http1' | 'http2' | 'http3' | 'auto'
+  },
+});
+```
+
+## Explicit Groups
+
+Define custom vendor groups:
+
+```ts
+bundleOptimizer({
+  groups: {
+    editor: ['monaco-editor', '@monaco-editor/*'],
+    charts: ['chart.js', 'recharts'],
+  },
+});
+```
+
+This creates `editor.[hash].js` and `charts.[hash].js` chunks.
+
+## Exclude
+
+Exclude packages from optimization (left to Rollup's default behavior):
+
+```ts
+bundleOptimizer({
+  exclude: ['react', 'react-dom'],
+});
+// or with regex
+exclude: [/@internal/],
+```
+
+## Preserve
+
+Prevent specific packages from being redistributed:
+
+```ts
+bundleOptimizer({
+  preserve: ['monaco-editor'],
+});
+```
+
+## Reports
+
+### Console Report (default)
+
+```text
+Vite Bundle Optimizer
+
+Before
+────────────────────────────────────────────────────────
+  Initial JS       2.13 MB
+  Initial gzip     616 KB
+  Initial chunks   1
+
+After
+────────────────────────────────────────────────────────
+  Initial JS       540 KB
+  Initial gzip     168 KB
+  Initial chunks   8
+
+Saved
+────────────────────────────────────────────────────────
+  Initial JS       -75%
+  Initial gzip     -73%
+```
+
+### JSON Report
+
+```ts
+bundleOptimizer({
+  report: {
+    format: 'json',
+    output: './bundle-report.json',
+  },
+});
+```
+
+### HTML Report
+
+```ts
+bundleOptimizer({
+  report: {
+    format: 'html',
+    output: './bundle-report.html',
+  },
+});
+```
+
+### Multiple Formats
+
+```ts
+bundleOptimizer({
+  report: {
+    format: ['console', 'json', 'html'],
+    output: './bundle-report.json',
+    detailed: true,
+  },
+});
+```
+
+## Performance Budgets
+
+```ts
+bundleOptimizer({
+  failOnError: true,
+  budget: {
+    initialGzip: 200_000,  // 200 KB max initial gzip
+    totalGzip: 1_000_000, // 1 MB max total gzip
+  },
+});
+```
+
+## Strategies
+
+| Strategy | minChunkSize | maxChunkSize | maxChunks | Use case |
+|---|---|---|---|---|
+| conservative | 50 KB | 1 MB | 15 | Legacy apps, minimal changes |
+| balanced (default) | 30 KB | 500 KB | 30 | Most applications |
+| aggressive | 20 KB | 300 KB | 50 | Maximum initial size reduction |
+
+## How It Works
+
+The optimization pipeline runs in the following stages:
+
+1. **Build handoff** — Vite delegates bundling to Rollup, which produces a dependency graph of all modules in the project.
+2. **Module analysis** — The plugin inspects that graph to understand which modules are shared across entry points and which come from third‑party packages.
+3. **Chunk optimization** — Based on the analysis, modules are split into two kinds of dedicated chunks:
+   - **Shared chunks** — code used by multiple entry points, extracted so it isn't duplicated.
+   - **Vendor chunks** — third‑party dependencies, grouped according to the configured vendor groups.
+4. **Final JS chunks** — Shared and vendor chunks are combined with the remaining entry chunks into the final set of JS chunks emitted to `dist/assets`.
+5. **Compression reporting** — Each final chunk is measured with both **gzip** and **brotli** to report the actual transfer sizes.
+
+The plugin works at the chunk topology level only — it does not modify, remove, or rewrite application code. Tree shaking remains Rollup's responsibility.
+
+## Requirements
+
+- Vite 5+
+- Node.js 20+
+
+## License
+
+MIT

@@ -1,0 +1,79 @@
+{
+  "name": "vite-bundle-optimizer",
+  "version": "1.0.0",
+  "author": "sergeybruska",
+  "description": "Vite plugin for automatic production bundle optimization via intelligent chunk splitting, vendor grouping, shared dependency extraction, and compression.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sergeybruska/vite-bundle-optimizer"
+  },
+  "bugs": {
+    "url": "https://github.com/sergeybruska/vite-bundle-optimizer/issues"
+  },
+  "homepage": "https://github.com/sergeybruska/vite-bundle-optimizer#readme",
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "bundle",
+    "optimizer",
+    "chunks",
+    "code-splitting",
+    "bundle optimization",
+    "vendor",
+    "gzip",
+    "brotli",
+    "rollup",
+    "visualizer"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "verify": "yarn lint && yarn test",
+    "prepublishOnly": "yarn verify && yarn build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js}": "eslint --fix"
+  },
+  "peerDependencies": {
+    "vite": ">=5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^7.0.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

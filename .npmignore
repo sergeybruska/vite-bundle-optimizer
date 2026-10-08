@@ -1,0 +1,12 @@
+# Development
+src/
+tests/
+coverage/
+.github/
+.husky/
+.vscode/
+.idea/
+
+# Local
+.DS_Store
+*.log
