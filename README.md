@@ -2,6 +2,13 @@
 
 A Vite plugin for automatic production bundle optimization via intelligent chunk splitting, vendor grouping, shared dependency extraction, and compression.
 
+<div align="left">
+<a href="https://www.npmjs.com/package/vite-plugin-bundle-optimizer"><img alt="npm" src="https://img.shields.io/npm/v/vite-plugin-bundle-optimizer?label=release"></a>
+<img alt="Vite compatibility" src="https://registry.vite.dev/api/badges?package=vite-plugin-bundle-optimizer&tool=vite">
+<a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green?style=flat"></a>
+<a href="https://github.com/sergeybruska/vite-plugin-bundle-optimizer/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/sergeybruska/vite-plugin-bundle-optimizer/actions/workflows/ci.yml/badge.svg"></a>
+</div>
+
 ## Features
 
 - **Intelligent vendor splitting** — automatically groups node_modules into cacheable vendor chunks by ecosystem (react, UI, charts, editor, etc.)
