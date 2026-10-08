@@ -17,6 +17,8 @@ A Vite plugin for automatic production bundle optimization via intelligent chunk
 
 ```bash
 npm install -D vite-bundle-optimizer
+yarn add -D vite-bundle-optimizer
+pnpm add -D vite-bundle-optimizer
 ```
 
 ## Quick Start
