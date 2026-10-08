@@ -1,4 +1,4 @@
-# vite-bundle-optimizer
+# Vite Bundle Optimizer
 
 A Vite plugin for automatic production bundle optimization via intelligent chunk splitting, vendor grouping, shared dependency extraction, and compression.
 
@@ -16,16 +16,16 @@ A Vite plugin for automatic production bundle optimization via intelligent chunk
 ## Installation
 
 ```bash
-npm install -D vite-bundle-optimizer
-yarn add -D vite-bundle-optimizer
-pnpm add -D vite-bundle-optimizer
+npm install -D vite-plugin-bundle-optimizer
+yarn add -D vite-plugin-bundle-optimizer
+pnpm add -D vite-plugin-bundle-optimizer
 ```
 
 ## Quick Start
 
 ```ts
 import { defineConfig } from 'vite';
-import bundleOptimizer from 'vite-bundle-optimizer';
+import bundleOptimizer from 'vite-plugin-bundle-optimizer';
 
 export default defineConfig({
   plugins: [bundleOptimizer()],
